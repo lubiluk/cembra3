@@ -19,5 +19,6 @@ class FetchPushEnv(fetch_env.FetchEnv, utils.EzPickle):
             gripper_extra_height=0.0, target_in_the_air=False, target_offset=0.0,
             obj_range=0.15, target_range=0.15, distance_threshold=0.05,
             initial_qpos=initial_qpos, reward_type=reward_type, obj_count=OBJECT_COUNT,
-            initial_obj_pos=[[1.25, 0.53, 0.425, 1., 0., 0., 0.], [1.25, 0.53, 0.41, 1., 0., 0., 0.]])
+            initial_obj_pos=[[1.25, 0.53, 0.425, 1., 0., 0., 0.], [1.25, 0.53, 0.41, 1., 0., 0., 0.]],
+            obj_bbox=[(0.05, 0.05, 0.05), (0.2, 0.02, 0.02)])
         utils.EzPickle.__init__(self)

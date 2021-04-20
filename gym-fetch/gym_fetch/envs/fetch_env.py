@@ -15,7 +15,7 @@ class FetchEnv(robot_env.RobotEnv):
     def __init__(
         self, model_path, n_substeps, gripper_extra_height, block_gripper,
         has_object, target_in_the_air, target_offset, obj_range, target_range,
-        distance_threshold, initial_qpos, reward_type, obj_count, initial_obj_pos
+        distance_threshold, initial_qpos, reward_type, obj_count, initial_obj_pos, obj_bbox
     ):
         """Initializes a new Fetch environment.
 
@@ -44,6 +44,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.reward_type = reward_type
         self.obj_count = obj_count
         self.initial_obj_pos = initial_obj_pos
+        self.obj_bbox = obj_bbox
         self._obj_idx = 0
 
         super(FetchEnv, self).__init__(
@@ -94,17 +95,22 @@ class FetchEnv(robot_env.RobotEnv):
         grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
         robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
         if self.has_object:
-            object_pos = self.sim.data.get_site_xpos('object{}'.format(self._obj_idx))
+            object_name = 'object{}'.format(self._obj_idx)
+            object_pos = self.sim.data.get_site_xpos(object_name)
             # rotations
-            object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object{}'.format(self._obj_idx)))
+            object_rot = rotations.mat2euler(self.sim.data.get_site_xmat(object_name))
             # velocities
-            object_velp = self.sim.data.get_site_xvelp('object{}'.format(self._obj_idx)) * dt
-            object_velr = self.sim.data.get_site_xvelr('object{}'.format(self._obj_idx)) * dt
+            object_velp = self.sim.data.get_site_xvelp(object_name) * dt
+            object_velr = self.sim.data.get_site_xvelr(object_name) * dt
             # gripper state
             object_rel_pos = object_pos - grip_pos
             object_velp -= grip_velp
+            # bounding box and inertia
+            object_bbox = np.array(self.obj_bbox[self._obj_idx])
+            object_ipos = self.sim.data.get_body_xipos(object_name)
+            object_imat = self.sim.data.get_body_ximat(object_name)
         else:
-            object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(0)
+            object_pos = object_rot = object_velp = object_velr = object_rel_pos = object_bbox = object_im = np.zeros(0)
         gripper_state = robot_qpos[-2:]
         gripper_vel = robot_qvel[-2:] * dt  # change to a scalar if the gripper is made symmetric
 
@@ -115,6 +121,7 @@ class FetchEnv(robot_env.RobotEnv):
         obs = np.concatenate([
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
             object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel,
+            object_bbox.ravel(), object_ipos.ravel(), object_imat.ravel()
         ])
 
         return {
