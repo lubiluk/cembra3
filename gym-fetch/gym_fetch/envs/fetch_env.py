@@ -158,6 +158,9 @@ class FetchEnv(robot_env.RobotEnv):
             object_qpos = np.array(self.initial_obj_pos[self._obj_idx])
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
+            angle = np.random.uniform(low=-1.57, high=1.57)
+            object_qrot =  (np.cos(angle/2), 0, 0, np.sin(angle/2))
+            object_qpos[3:] = object_qrot
             self.sim.data.set_joint_qpos('object{}:joint'.format(self._obj_idx), object_qpos)
             self.height_offset = object_qpos[2]
 
