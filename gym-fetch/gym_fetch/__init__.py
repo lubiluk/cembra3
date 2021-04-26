@@ -34,3 +34,10 @@ for reward_type in ["sparse", "dense"]:
         kwargs=kwargs,
         max_episode_steps=50,
     )
+
+    register(
+        id="FetchPushCam{}-v2".format(suffix),
+        entry_point="gym_fetch.envs:FetchPushCamEnv",
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )

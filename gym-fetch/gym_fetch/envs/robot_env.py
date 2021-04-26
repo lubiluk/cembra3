@@ -42,7 +42,10 @@ class RobotEnv(gym.GoalEnv):
         self.observation_space = spaces.Dict(dict(
             desired_goal=spaces.Box(-np.inf, np.inf, shape=obs['achieved_goal'].shape, dtype='float32'),
             achieved_goal=spaces.Box(-np.inf, np.inf, shape=obs['achieved_goal'].shape, dtype='float32'),
-            observation=spaces.Box(-np.inf, np.inf, shape=obs['observation'].shape, dtype='float32'),
+            observation=spaces.Dict({
+                'robot_state': spaces.Box(-np.inf, np.inf, shape=obs['observation']['robot_state'].shape, dtype='float32'),
+                'camera': spaces.Box(-np.inf, np.inf, shape=obs['observation']['camera'].shape, dtype='float32')
+            }),
         ))
 
     @property
