@@ -13,7 +13,7 @@ class PreprocessingWrapper(gym.ObservationWrapper):
     def __init__(self, env):
         super(PreprocessingWrapper, self).__init__(env)
 
-        self.img_size = (1, 100, 100)
+        self.img_size = (1, 200, 200)
 
         obs_spaces = dict(
             camera=gym.spaces.Box(
