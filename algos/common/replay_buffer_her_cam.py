@@ -163,13 +163,19 @@ class ReplayBuffer:
 
         for idx in range(ep_len):
             obs = {
-                "observation": ep["obs"]["observation"][idx],
+                "observation": {
+                    "camera": ep["obs"]["observation"]["camera"][idx],
+                    "robot_state": ep["obs"]["observation"]["robot_state"][idx],
+                },
                 "desired_goal": ep["obs"]["desired_goal"][idx],
                 "achieved_goal": ep["obs"]["achieved_goal"][idx],
             }
             act = ep["act"][idx]
             obs2 = {
-                "observation": ep["obs2"]["observation"][idx],
+                "observation": {
+                    "camera": ep["obs2"]["observation"]["camera"][idx],
+                    "robot_state": ep["obs2"]["observation"]["robot_state"][idx],
+                },
                 "desired_goal": ep["obs2"]["desired_goal"][idx],
                 "achieved_goal": ep["obs2"]["achieved_goal"][idx],
             }

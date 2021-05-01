@@ -47,9 +47,9 @@ class SquashedGaussianMLPActor(nn.Module):
             self.log_std_layer.to(device)
 
     def forward(self, obs, deterministic=False, with_logprob=True):
-        out_device = obs["camera"][0].device
-        obs_img = obs["camera"].to(self.device)
-        obs_robot_state = obs["robot_state"].to(self.device)
+        out_device = obs["observation"]["camera"][0].device
+        obs_img = obs["observation"]["camera"].to(self.device)
+        obs_robot_state = obs["observation"]["robot_state"].to(self.device)
         dgoal = obs["desired_goal"].to(self.device)
 
         feat = self.extractor(obs_img)

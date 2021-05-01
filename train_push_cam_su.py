@@ -54,7 +54,7 @@ class Extractor(nn.Module):
 ac_kwargs = dict(
     hidden_sizes=[256, 256], activation=nn.ReLU, extractor_module=Extractor
 )
-rb_kwargs = dict(size=1000000,
+rb_kwargs = dict(size=10_000,
                  n_sampled_goal=4,
                  goal_selection_strategy='future')
 
